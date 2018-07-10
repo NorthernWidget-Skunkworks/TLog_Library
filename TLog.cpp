@@ -548,7 +548,7 @@ void TLog::turnOffSDcard()
 	// // Note: you must disconnect the LED on pin 13 or you’ll bleed current through the limit resistor
 	// // LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // wait 1 second before pulling the plug!
 	delay(6);
-	// io.digitalWrite(Ext3v3Ctrl, HIGH);  //turn off 3v3 external
+	io.digitalWrite(Ext3v3Ctrl, HIGH);  //turn off 3v3 external
 	io.digitalWrite(Ext5vCtrl, HIGH);  //turn off 5v
 	io.digitalWrite(SD3v3Ctrl, HIGH);  //turn off SD
 	io.digitalWrite(VRefCtrl, LOW);  //turn off referance
