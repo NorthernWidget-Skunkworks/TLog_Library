@@ -76,20 +76,21 @@ int TLog::begin(uint8_t *Vals, uint8_t NumVals, String Header_)
 	// SPI.setDataMode(SPI_MODE0);
 	// SPI.setClockDivider(SPI_CLOCK_DIV2); //Sts SPI clock to 4 MHz for an 8 MHz system clock
 
-
-	AttachPCI(RTCInt, TLog::isr1, FALLING); //Attach an interrupt driven by the interrupt from RTC, logs data
-	AttachPCI(LogInt, TLog::isr0, FALLING);	//Attach an interrupt driven by the manual log button, sets logging flag and logs data
-	pinMode(RTCInt, INPUT_PULLUP);
-	pinMode(LogInt, INPUT);
-
 	I2CTest();
 	ClockTest();
 	SDTest();
 	Serial.print("\nTimestamp = ");
 	Serial.println(LogTimeDate);
   	
-  	digitalWrite(BuiltInLED, HIGH); 
+
+	AttachPCI(RTCInt, TLog::isr1, FALLING); //Attach an interrupt driven by the interrupt from RTC, logs data
+	AttachPCI(LogInt, TLog::isr0, FALLING);	//Attach an interrupt driven by the manual log button, sets logging flag and logs data
+	pinMode(RTCInt, INPUT_PULLUP);
+	pinMode(LogInt, INPUT);
+
+  	// digitalWrite(BuiltInLED, HIGH); 
   	pinMode(BuiltInLED, INPUT);
+	Serial.println("BANG!"); //DEBUG!
 
   	if(OBError) {
   		LED_Color(RED);	//On board failure
@@ -364,6 +365,11 @@ String TLog::GetOnBoardVals() //FIX!
 	return "," + String(RTCTemp) + "," + String(BatVoltage) + "," + LogTimeDate;
 }
 
+float TLog::GetVoltage(uint8_t Pin)
+{
+	return adc.GetVoltageComp(Pin); //Return compensated voltage from ADC
+}
+
 // float TLog::analogRead(uint8_t Pin)
 // {
 // 	io.digitalWrite(VRefCtrl, HIGH);
@@ -467,7 +473,7 @@ static void TLog::Log()
 
 void TLog::isr0() { selfPointer->StartLog(); }
 
-void TLog::isr1() { selfPointer->Log(); }
+void TLog::isr1() { selfPointer->Log(); }  
 
 //Low Power functions
 void TLog::sleepNow()         // here we put the arduino to sleep

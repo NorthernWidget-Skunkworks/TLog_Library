@@ -44,9 +44,12 @@ class TLog
 		int LogStr(String Val);
 		void LED_Color(unsigned long Val);
 		void Run(String (*f)(void), unsigned long LogInterval);
+		float GetVoltage(uint8_t Pin); //Get voltage from on board ADC
 		// float analogRead(uint8_t Pin);
 		// uint8_t digitalRead(uint8_t Pin);
 		// void digitalWrite(uint8_t Pin, uint8_t State);
+		//FIX! Make private/protected 
+		SX1509 io; // Create an SX1509 object to be used throughout
 	protected:
 		float TempConvert(float V, float Vcc, float R, float A, float B, float C, float D, float R25);
 		void Blink();
@@ -70,7 +73,6 @@ class TLog
 		void InitLogFile();
 
 		DS3231_Logger RTC;
-		SX1509 io; // Create an SX1509 object to be used throughout
 		LTC2495 adc = LTC2495(0x45, 5.0, 15, 1.8);
 
 		#if defined(TLog_1v0)  //FIX DEFINITION!
